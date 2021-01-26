@@ -17,7 +17,7 @@ const path = require('path');
 const title = 'Tax Map Viewer';
 const description = 'View Vernonia area tax maps over imagery.';
 const themeColor = '#000000';
-const deployUrl = 'https://localhost:8080/';
+const deployUrl = 'https://vernonia-tax-map-viewer.netlify.app';
 const appImageUrl = 'socialcard.png';
 
 // HTML plugin options for index.ejs. Primarily for title and meta tags.

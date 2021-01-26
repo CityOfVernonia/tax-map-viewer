@@ -1,7 +1,7 @@
 {
   "name": "tax-map-viewer",
   "version": "0.0.1",
-  "description": "Just viewing tax maps.",
+  "description": "View Vernonia area tax maps over imagery.",
   "author": {
     "name": "COV-GIS",
     "url": "https://www.vernonia-or.gov"
