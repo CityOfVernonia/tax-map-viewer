@@ -1,0 +1,193 @@
+.tax-maps-widget {
+  display: flex;
+  flex-flow: column;
+  min-width: 300px;
+  background-color: $background-color;
+  padding: 1rem;
+
+  button {
+    &:disabled {
+      pointer-events: none;
+      opacity: 0.6;
+    }
+    svg {
+      width: 16px;
+      height: 16px;
+      fill: $background-color;
+    }
+  }
+}
+
+.tax-maps-widget--label {
+  margin: 0.75rem 0 0.25rem;
+  &:first-child {
+    margin-top: 0;
+  }
+}
+
+.tax-maps-widget--button-row {
+  display: flex;
+  flex-flow: row;
+  button {
+    margin: 0 0.25rem;
+    width: auto;
+    &:first-child {
+      margin-left: 0;
+    }
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
+
+.tax-map-widget--slider[type="range"] {
+  &::-ms-tooltip {
+    display: none;
+  }
+
+  -webkit-appearance: none;
+  margin: 4px 0;
+  width: 100%;
+
+  &:disabled {
+    pointer-events: none;
+    opacity: 0.6;
+  }
+
+  &::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 4px;
+    cursor: pointer;
+    box-shadow: none;
+    background-color: $border-color;
+    border-radius: 0px;
+    border: none;
+    transition: background-color 250ms ease-in-out;
+  }
+
+  &::-webkit-slider-thumb {
+    box-shadow: none;
+    border: none;
+    height: $button-height--half;
+    width: 10px;
+    border-radius: 2px;
+    background-color: $button-color;
+    cursor: pointer;
+    -webkit-appearance: none;
+    margin-top: $button-height--fifth * -1;
+    transition: background-color 250ms ease-in-out;
+  }
+
+  &[disabled]::-webkit-slider-thumb {
+    background-color: $interactive-font-color--disabled;
+  }
+
+  &[disabled],
+  &[disabled]::-webkit-slider-runnable-track,
+  &[disabled]::-webkit-slider-thumb {
+    cursor: default;
+  }
+
+  [disabled] + .tax-map-widget--slider-ticks {
+    color: $interactive-font-color--disabled;
+  }
+
+  &:focus::-webkit-slider-runnable-track {
+    background-color: $border-color;
+  }
+
+  &::-moz-range-track,
+  &::-ms-track {
+    width: 100%;
+    height: 4px;
+    cursor: pointer;
+    box-shadow: none;
+    background-color: $border-color;
+    border: none;
+    border-radius: 0px;
+    border: none;
+    color: transparent;
+  }
+
+  &::-moz-range-thumb,
+  &::-ms-thumb {
+    box-shadow: none;
+    border: none;
+    height: $button-height--half;
+    width: 10px;
+    border-radius: 2px;
+    background: $button-color;
+    cursor: pointer;
+  }
+
+  &::-ms-fill-lower,
+  &::-ms-fill-upper {
+    background: $border-color;
+    border: none;
+    border-radius: 0px;
+    box-shadow: none;
+  }
+
+  &:focus::-ms-fill-lower,
+  &:focus::-ms-fill-upper {
+    background: $border-color;
+  }
+}
+
+.tax-map-widget--slider--ticks {
+  margin-top: 8px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+}
+
+.tax-map-widget--slider--labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  line-height: 1;
+  margin-top: 0.25rem;
+  color: $interactive-font-color;
+  span {
+    width: 100%;
+    text-align: center;
+    &:first-child {
+      text-align: left;
+    }
+    &:last-child {
+      text-align: right;
+    }
+  }
+}
+
+.tax-maps-widget--print-result {
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  margin: 0.25rem 0;
+  &:first-child {
+    margin-top: 0.5rem;
+  }
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  a {
+    display: flex;
+    flex-flow: row;
+    align-items: center;
+    color: $button-color;
+    text-decoration: none;
+    &:hover {
+      color: $button-color--hover;
+    }
+  }
+
+  [class*="esri-icon"] {
+    margin-right: 0.5rem;
+  }
+}
+
+.tax-maps-widget--print-error {
+  color: $font-color--error;
+}
