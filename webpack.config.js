@@ -203,6 +203,13 @@ module.exports = (_, args) => {
       extensions: ['.ts', '.tsx', '.js', '.scss', '.css'],
     },
 
+    ignoreWarnings: [
+      {
+        module: /\/@arcgis\/core\//,
+        message: /Critical dependency: the request of a dependency is an expression/,
+      }
+    ],
+
     // Webpack plugins.
     plugins: [
       new CleanWebpackPlugin(),

@@ -68,11 +68,16 @@
       "@babel/preset-typescript"
     ],
     "plugins": [
-      "@babel/plugin-proposal-class-properties",
       [
         "@babel/plugin-proposal-decorators",
         {
           "legacy": true
+        }
+      ],
+      [
+        "@babel/plugin-proposal-class-properties",
+        {
+          "loose": true
         }
       ]
     ]
@@ -119,6 +124,7 @@
     "tabWidth": 2
   },
   "jest": {
+    "preset": "ts-jest",
     "roots": [
       "<rootDir>/src"
     ],
@@ -137,6 +143,6 @@
     ]
   },
   "arcgis": {
-    "type": "jsapi"
+    "type": "arcgis-core"
   }
 }

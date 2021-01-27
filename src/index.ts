@@ -9,7 +9,6 @@ import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
 import MapImageLayer from '@arcgis/core/layers/MapImageLayer';
 
 import App from 'app/App';
-// import TaxMapPopup from 'app/widgets/TaxMapPopup';
 import TaxMaps from 'app/widgets/TaxMaps';
 
 esriConfig.portalUrl = 'https://gisportal.vernonia-or.gov/portal';
@@ -26,9 +25,6 @@ const taxMapBoundaries = new FeatureLayer({
     id: '5bbd874a1b4f4674a03ce5ba25e08bf2',
   },
   popupEnabled: false,
-  // popupTemplate: new TaxMapPopup({
-  //   taxMapsLayer,
-  // }),
 });
 
 taxMapBoundaries.when(() => {
