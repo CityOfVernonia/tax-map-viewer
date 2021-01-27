@@ -13,6 +13,8 @@ import { renderable, tsx } from '@arcgis/core/widgets/support/widget';
 
 import Widget from '@arcgis/core/widgets/Widget';
 
+import TaxMapPopup from './TaxMapPopup';
+
 import PrintViewModel from '@arcgis/core/widgets/Print/PrintViewModel';
 import PrintTemplate from '@arcgis/core/tasks/support/PrintTemplate';
 
@@ -112,6 +114,8 @@ export default class TaxMaps extends Widget {
       .catch((): void => {
         this._initError = true;
       });
+
+    taxMapBoundaries.popupTemplate = new TaxMapPopup();
 
     _printer.view = view;
   }

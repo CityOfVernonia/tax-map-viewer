@@ -1,3 +1,4 @@
+const webpack = require('webpack');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
@@ -205,6 +206,15 @@ module.exports = (_, args) => {
 
     // Webpack plugins.
     plugins: [
+
+      new webpack.ContextReplacementPlugin(
+        /\/@arcgis\/core\//,
+        (data) => {
+          delete data.dependencies[0].critical;
+          return data;
+        },
+      ),
+
       new CleanWebpackPlugin(),
 
       new ArcGISPlugin({ locales: ['en'] }),

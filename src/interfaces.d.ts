@@ -36,16 +36,10 @@ declare namespace __app {
     title: string;
   }
 
-  export interface TaxMapPopupProperties extends esri.PopupTemplateProperties {
-    /**
-     * Layer with tax map images.
-     */
-    taxMapsLayer: esri.MapImageLayer;
-  }
+  export interface TaxMapPopupProperties extends esri.PopupTemplateProperties {}
 
   export class TaxMapPopup extends esri.PopupTemplate {
     constructor(properties: TaxMapPopupProperties);
-    taxMapsLayer: esri.MapImageLayer;
   }
 
   export interface TaxMapsProperties extends esri.WidgetProperties {
