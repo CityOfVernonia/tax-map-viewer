@@ -1,8 +1,3 @@
-interface PrintResult extends Object {
-  state: string;
-  url: null | string;
-}
-
 import app = __app;
 
 import { whenOnce } from '@arcgis/core/core/watchUtils';
@@ -32,7 +27,6 @@ const CSS = {
   slider: 'tax-map-widget--slider',
   sliderLabels: 'tax-map-widget--slider--labels',
   buttonRow: 'tax-maps-widget--button-row',
-  printResults: 'tax-maps-widget--print-results',
   printResult: 'tax-maps-widget--print-result',
   printError: 'tax-maps-widget--print-error',
   icons: {
@@ -43,6 +37,11 @@ const CSS = {
 };
 
 let KEY = 0;
+
+interface PrintResult extends Object {
+  state: string;
+  url: null | string;
+}
 
 @subclass('app.widgets.TaxMaps')
 export default class TaxMaps extends Widget {
@@ -77,19 +76,23 @@ export default class TaxMaps extends Widget {
   @property()
   private _printer = new PrintViewModel({
     printServiceUrl:
-      'https://gisportal.vernonia-or.gov/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task',
+      'https://gisportal.vernonia-or.gov/arcgis/rest/services/TaxMaps/PrintTaxMap/GPServer/Export%20Web%20Map',
   });
 
   @property()
   @renderable()
   private _printResults: Array<PrintResult> = [];
 
+  @property()
+  @renderable()
+  private _printError = false;
+
   constructor(properties?: app.TaxMapsProperties) {
     super(properties);
     whenOnce(this, 'taxMapBoundaries.loaded', this._init.bind(this));
   }
 
-  private async _init(): Promise<void> {
+  private _init(): void {
     const { taxMapBoundaries, _options, _printer, view } = this;
 
     taxMapBoundaries
@@ -115,7 +118,16 @@ export default class TaxMaps extends Widget {
         this._initError = true;
       });
 
-    taxMapBoundaries.popupTemplate = new TaxMapPopup();
+    taxMapBoundaries.popupTemplate = new TaxMapPopup({
+      showTaxMap: (attributes: any) => {
+        this._selectTaxMap({
+          target: {
+            value: `${attributes.name},${attributes.alias},${attributes.taxmap},${attributes.filename}`,
+          },
+        } as any);
+      },
+    });
+    taxMapBoundaries.popupEnabled = true;
 
     _printer.view = view;
   }
@@ -131,6 +143,8 @@ export default class TaxMaps extends Widget {
     let value: string | string[] = (evt.target as HTMLSelectElement).value;
     value = value.split(',');
     const [name, , , filename] = value;
+
+    view.popup.close();
 
     if (name === 'none') {
       sublayers.getItemAt(0).sublayers.forEach((sublayer: esri.Sublayer) => (sublayer.visible = false));
@@ -173,21 +187,25 @@ export default class TaxMaps extends Widget {
     const { _printer, _extents, view, _printResults } = this;
     const [name] = this._selectedTaxMap as string[];
 
-    if (!intersects(view.extent, _extents[name].extent) || view.scale > 50000) {
-      return;
-    }
-
     const printResult: PrintResult = {
       state: 'printing',
       url: null,
     };
+
+    this._printError = false;
+
+    if (!intersects(view.extent, _extents[name].extent) || view.scale > 50000) {
+      this._printError = true;
+      return;
+    }
+
     _printResults.push(printResult);
 
     _printer
       .print(
         new PrintTemplate({
           format: 'pdf',
-          layout: 'letter-ansi-a-landscape',
+          layout: 'TaxMapViewer' as any,
         }),
       )
       .then((result: any): void => {
@@ -203,7 +221,7 @@ export default class TaxMaps extends Widget {
   }
 
   render(): tsx.JSX.Element {
-    const { _options, _initError, _selectedTaxMap, _printResults } = this;
+    const { _options, _initError, _selectedTaxMap, _printResults, _printError } = this;
 
     const disabled = _selectedTaxMap === null;
 
@@ -220,10 +238,15 @@ export default class TaxMaps extends Widget {
     return (
       <div class={CSS.base}>
         <span class={CSS.label}>Select Tax Map</span>
-        <select class={CSS.select} bind={this} onchange={this._selectTaxMap}>
+        <select
+          class={CSS.select}
+          value={_selectedTaxMap ? _selectedTaxMap.join(',') : 'none,0,0,0'}
+          bind={this}
+          onchange={this._selectTaxMap}
+        >
           {_options}
         </select>
-        <span class={CSS.label}>Layer Transparency</span>
+        <span class={CSS.label}>Tax Map Transparency</span>
         <input
           class={CSS.slider}
           type="range"
@@ -269,40 +292,43 @@ export default class TaxMaps extends Widget {
             </svg>
           </button>
         </div>
-        <div>
-          {_printResults.map(
-            (pr: PrintResult, index: number): tsx.JSX.Element => {
-              const label = `Tax Map Print ${index + 1}`;
-              switch (pr.state) {
-                case 'printing':
-                  return (
-                    <div key={KEY++} class={CSS.printResult}>
-                      <span class={CSS.icons.printing}></span>
+        {_printError ? (
+          <div key={KEY++} class={this.classes(CSS.printResult, CSS.printError)} style="font-size:0.85rem;">
+            Print extent outside the bounds of the tax map or zoomed too far out.
+          </div>
+        ) : null}
+        {_printResults.map(
+          (pr: PrintResult, index: number): tsx.JSX.Element => {
+            const label = `Tax Map Print ${index + 1}`;
+            switch (pr.state) {
+              case 'printing':
+                return (
+                  <div key={KEY++} class={CSS.printResult}>
+                    <span class={CSS.icons.printing}></span>
+                    <span>{label}</span>
+                  </div>
+                );
+              case 'printed':
+                return (
+                  <div key={KEY++} class={CSS.printResult}>
+                    <a href={pr.url} target="_blank">
+                      <span class={CSS.icons.download}></span>
                       <span>{label}</span>
-                    </div>
-                  );
-                case 'printed':
-                  return (
-                    <div key={KEY++} class={CSS.printResult}>
-                      <a href={pr.url} target="_blank">
-                        <span class={CSS.icons.download}></span>
-                        <span>{label}</span>
-                      </a>
-                    </div>
-                  );
-                case 'error':
-                  return (
-                    <div key={KEY++} class={this.classes(CSS.printResult, CSS.printError)}>
-                      <span class={CSS.icons.error}></span>
-                      <span>{label}</span>
-                    </div>
-                  );
-                default:
-                  return <div key={KEY++}></div>;
-              }
-            },
-          )}
-        </div>
+                    </a>
+                  </div>
+                );
+              case 'error':
+                return (
+                  <div key={KEY++} class={this.classes(CSS.printResult, CSS.printError)}>
+                    <span class={CSS.icons.error}></span>
+                    <span>{label}</span>
+                  </div>
+                );
+              default:
+                return <div key={KEY++}></div>;
+            }
+          },
+        )}
       </div>
     );
   }

@@ -12,12 +12,12 @@ import CustomContent from '@arcgis/core/popup/content/CustomContent';
 
 interface ContentProperties extends esri.WidgetProperties {
   graphic: esri.Graphic;
-  taxMapsLayer: esri.MapImageLayer;
 }
 
 const CSS = {
-  buttonRow: 'cov-form--button-row',
-  button: 'esri-button',
+  base: 'esri-widget__table',
+  th: 'esri-feature__field-header',
+  td: 'esri-feature__field-data',
 };
 
 @subclass('app.widgets.TaxMapPopup.Content')
@@ -25,20 +25,65 @@ class Content extends Widget {
   @property()
   graphic!: esri.Graphic;
 
-  @property()
-  taxMapsLayer!: esri.MapImageLayer;
+  private _download(type: string, evt: Event): void {
+    evt.preventDefault();
+    window.open(`./tax-maps/${type}/${this.graphic.attributes.taxmap}.${type}`, '_blank');
+  }
+
+  private _show(attributes: any, evt: Event) {
+    evt.preventDefault();
+    this.emit('show-tax-map', attributes);
+  }
 
   constructor(properties: ContentProperties) {
     super(properties);
   }
 
-  postInitialize(): void {
-  }
-
   render(): tsx.JSX.Element {
+    const {
+      graphic: { attributes },
+    } = this;
+
+    const parts = attributes.alias.split(' ');
+
     return (
-      <div>
-      </div>
+      <table class={CSS.base}>
+        <tr>
+          <th class={CSS.th}>Township</th>
+          <td class={CSS.td}>{parts[0]}</td>
+        </tr>
+        <tr>
+          <th class={CSS.th}>Range</th>
+          <td class={CSS.td}>{parts[1]}</td>
+        </tr>
+        <tr>
+          <th class={CSS.th}>Section</th>
+          <td class={CSS.td}>{parts[2]}</td>
+        </tr>
+        {parts[3] ? (
+          <tr>
+            <th class={CSS.th}>1/4 and 1/16 Sections</th>
+            <td class={CSS.td}>{parts[3]}</td>
+          </tr>
+        ) : null}
+        <tr>
+          <td colspan="2" class={CSS.td}>
+            <div style="display:flex; flex-flow:row; justify-content:space-around; width:100%;">
+              <a href="#" bind={this} onclick={this._show.bind(this, attributes)}>
+                Show Tax Map
+              </a>
+              &nbsp;&nbsp;&nbsp;
+              <a href="#" bind={this} onclick={this._download.bind(this, 'pdf')}>
+                Download PDF
+              </a>
+              &nbsp;&nbsp;&nbsp;
+              <a href="#" bind={this} onclick={this._download.bind(this, 'tiff')}>
+                Download TIFF
+              </a>
+            </div>
+          </td>
+        </tr>
+      </table>
     );
   }
 }
@@ -52,7 +97,7 @@ export default class TaxMapPopup extends PopupTemplate {
   outFields = ['*'];
 
   @property()
-  taxMapsLayer!: esri.MapImageLayer;
+  showTaxMap = (_attributes: any) => {};
 
   constructor(properties?: app.TaxMapPopupProperties) {
     super(properties);
@@ -62,10 +107,13 @@ export default class TaxMapPopup extends PopupTemplate {
   customContent = new CustomContent({
     outFields: ['*'],
     creator: (evt: any): Widget => {
-      return new Content({
+      const content = new Content({
         graphic: evt.graphic,
-        taxMapsLayer: this.taxMapsLayer,
       });
+      content.on('show-tax-map', (attributes: any) => {
+        this.showTaxMap(attributes);
+      });
+      return content;
     },
   });
 

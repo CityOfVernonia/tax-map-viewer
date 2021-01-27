@@ -1,7 +1,7 @@
 .tax-maps-widget {
   display: flex;
   flex-flow: column;
-  min-width: 300px;
+  width: 240px;
   background-color: $background-color;
   padding: 1rem;
 
@@ -30,7 +30,7 @@
   flex-flow: row;
   button {
     margin: 0 0.25rem;
-    width: auto;
+    width: 100%;
     &:first-child {
       margin-left: 0;
     }

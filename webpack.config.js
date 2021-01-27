@@ -16,7 +16,7 @@ const path = require('path');
 // Application information.
 const title = 'Tax Map Viewer';
 const description = 'View Vernonia area tax maps over imagery.';
-const themeColor = '#000000';
+const themeColor = '#FFFFFF';
 const deployUrl = 'https://vernonia-tax-map-viewer.netlify.app';
 const appImageUrl = 'socialcard.png';
 
