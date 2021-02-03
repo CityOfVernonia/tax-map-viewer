@@ -70,6 +70,7 @@ const productionDevtool = false;
 // https://webpack.js.org/configuration/resolve/#resolvealias
 const resolveAlias = {
   app: path.resolve(__dirname, 'src'),
+  cov: path.resolve(__dirname, 'node_modules/cov-arcgis-esm/src'),
 };
 
 // Workbox service workers.
@@ -216,6 +217,8 @@ module.exports = (_, args) => {
 
       new ArcGISPlugin({ locales: ['en'] }),
 
+      // new StencilPlugin(),
+
       new HtmlWebPackPlugin({
         template: './src/index.ejs',
         filename: 'index.html',
@@ -240,6 +243,16 @@ module.exports = (_, args) => {
         filter: (fileName) => {
           return fileName.includes('index');
         },
+      }),
+
+      new CopyPlugin({
+        patterns: [
+          {
+            context: 'node_modules/@esri/calcite-components/dist/calcite',
+            from: '**/*',
+            to: 'calcite'
+          },
+        ],
       }),
 
       new CopyPlugin({

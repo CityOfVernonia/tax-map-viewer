@@ -10,6 +10,7 @@ import MapImageLayer from '@arcgis/core/layers/MapImageLayer';
 
 import App from 'app/App';
 import TaxMaps from 'app/widgets/TaxMaps';
+import MadeWith from 'cov/widgets/MadeWith';
 
 esriConfig.portalUrl = 'https://gisportal.vernonia-or.gov/portal';
 
@@ -75,6 +76,13 @@ view.when(() => {
       taxMapBoundaries,
     }),
     'top-right',
+  );
+  view.ui.add(
+    new MadeWith({
+      color: '#FFFFFF',
+      size: '12px',
+    }),
+    'bottom-left',
   );
 });
 
