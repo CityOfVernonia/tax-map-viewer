@@ -4,9 +4,9 @@
   "scripts": {
     "build": "vite build",
     "dev": "vite",
-    "lint": "eslint . --ext .js,.ts,.tsx",
-    "postinstall": "node ./scripts/sass-replace.js && node ./scripts/copy-assets.js",
-    "prettier": "prettier --write \"src/**/*.ts?(x)\" && prettier --write \"src/**/*.js\"",
+    "lint": "eslint . --ext .ts,.tsx",
+    "postinstall": "node ./scripts/sass-replace.js",
+    "prettier": "prettier --write \"src/**/*.ts?(x)\"",
     "serve": "vite preview",
     "test": "npm run prettier && npm run lint"
   },
@@ -21,24 +21,26 @@
   },
   "homepage": "https://github.com/CityOfVernonia/tax-map-viewer#readme",
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^5.25.0",
-    "@typescript-eslint/parser": "^5.25.0",
+    "@typescript-eslint/eslint-plugin": "^5.48.1",
+    "@typescript-eslint/parser": "^5.48.1",
     "ansi-regex": ">=6.0.1",
-    "eslint": "^8.15.0",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-prettier": "^4.0.0",
-    "fs-extra": "^10.1.0",
-    "prettier": "^2.6.2",
-    "replace-in-file": "^6.3.2",
-    "sass": "^1.51.0",
-    "tslib": "^2.4.0",
-    "typescript": "^4.6.4",
-    "vite": "^2.9.9"
+    "eslint": "^8.31.0",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "fs-extra": "^11.1.0",
+    "prettier": "^2.8.2",
+    "replace-in-file": "^6.3.5",
+    "sass": "^1.57.1",
+    "tslib": "^2.4.1",
+    "typescript": "^4.9.4",
+    "vite": "3.0.4",
+    "vite-plugin-ejs": "^1.6.4"
   },
   "dependencies": {
-    "@arcgis/core": "^4.23.7",
-    "@esri/calcite-components": "1.0.0-beta.80",
-    "@vernonia/core": "^2.0.7"
+    "@arcgis/core": "^4.25.5",
+    "@esri/calcite-components": "^1.0.0-beta.99",
+    "@vernonia/core": "^2.1.12",
+    "@vernonia/map-application": "^1.0.6"
   },
   "eslintConfig": {
     "env": {
@@ -48,12 +50,12 @@
     "parser": "@typescript-eslint/parser",
     "ignorePatterns": [
       "package.json",
+      "vite.config.js",
       "package-lock.json",
+      "build/**",
       "node_modules/**",
       "scripts/**",
-      "src/public/**",
-      "src/core/**",
-      "vite.config.js"
+      "src/public/**"
     ],
     "rules": {
       "no-console": 0,
@@ -75,6 +77,7 @@
     "singleQuote": true,
     "trailingComma": "all",
     "printWidth": 120,
-    "tabWidth": 2
+    "tabWidth": 2,
+    "endOfLine": "auto"
   }
 }
