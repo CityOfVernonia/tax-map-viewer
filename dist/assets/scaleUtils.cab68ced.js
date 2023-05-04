@@ -1,1 +1,0 @@
-import{a5 as r,aH as a}from"./index.3224a022.js";const o=96;function p(e,t){const n=t||e.extent,i=e.width,d=r(n&&n.spatialReference);return n&&i?n.width/i*d*a*o:0}function c(e,t){return e/(r(t)*a*o)}function s(e,t){const n=e.extent,i=e.width-(e.padding?e.padding.left+e.padding.right:0),d=c(t,n.spatialReference);return n.clone().expand(d*i/n.width)}export{s as d,p as i,c as r};
