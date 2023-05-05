@@ -54,7 +54,15 @@ const load = async () => {
     panelPosition: 'end',
     panelWidgets: [
       {
-        widget: new TaxMaps({ view, layer: taxMaps, showSwitch: false }),
+        widget: new TaxMaps({
+          view,
+          layer: taxMaps,
+          imageUrlTemplate: 'https://cityofvernonia.github.io/vernonia-tax-maps/tax-maps/jpg/{taxmap}.jpg',
+          titleAttributeField: 'name',
+          fileAttributeField: 'taxmap',
+          urlAttributeField: 'county_url',
+          showSwitch: false,
+        }),
         text: 'Tax Maps',
         icon: 'tile-layer',
         type: 'calcite-panel',
